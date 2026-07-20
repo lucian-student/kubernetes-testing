@@ -2,7 +2,7 @@ apiVersion: operator.victoriametrics.com/v1beta1
 kind: VMNodeScrape
 metadata:
   name: cadvisor
-  namespace: prod
+  namespace: monitoring-prod
   labels:
     job: cadvisor
 spec: 
