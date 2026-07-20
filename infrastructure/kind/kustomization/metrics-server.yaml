@@ -5,7 +5,7 @@ metadata:
   namespace: flux-system
 spec:
   interval: 10m0s
-  path: ./infrastructure/oracle/metrics-server
+  path: ./infrastructure/kind/metrics-server
   sourceRef: 
     kind: GitRepository
     name: flux-system
