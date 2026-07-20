@@ -2,3 +2,15 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 resources:
   - ../../base/victoria-metrics/metrics.yaml
   - ../../base/victoria-metrics/metrics-cadvisor.yaml
+patches:
+  - target:
+      kind: VMAgent
+      name:  metrics-agent
+    patch: |
+      apiVersion: operator.victoriametrics.com/v1beta1
+      kind: VMAgent
+      metadata:
+        name: metrics-agent
+      spec:
+        tlsConfig:
+          insecureSkipVerify: true
