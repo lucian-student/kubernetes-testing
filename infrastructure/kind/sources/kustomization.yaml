@@ -5,3 +5,4 @@ resources:
   - "../../base/sources/cert-manager.yaml"
   - "../../base/sources/victoria-metrics.yaml"
   - "../../base/sources/grafana.yaml"
+  - "../../base/sources/metrics-server.yaml"
