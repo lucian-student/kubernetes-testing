@@ -1,0 +1,21 @@
+apiVersion: operator.victoriametrics.com/v1beta1
+kind: VMSingle
+metadata: 
+  name: metrics
+  namespace: monitoring-prod
+spec:
+  retentionPeriod: "1w"
+  storage:
+   resources:
+    requests:
+      storage: 2Gi
+---
+apiVersion: operator.victoriametrics.com/v1beta1
+kind: VMAgent
+metadata:
+  name: metrics-agent
+  namespace: monitoring-prod
+spec:
+  selectAllByDefault: true
+  remoteWrite:
+   - url: "http://vmsingle-metrics.monitoring-prod.svc:8428/api/v1/write"

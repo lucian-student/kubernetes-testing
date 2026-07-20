@@ -1,0 +1,15 @@
+apiVersion: operator.victoriametrics.com/v1beta1
+kind: VMNodeScrape
+metadata:
+  name: cadvisor
+  namespace: prod
+  labels:
+    job: cadvisor
+spec: 
+  scheme: "https"
+  jobLabel: job
+  tlsConfig:
+    caFile: "/var/run/secrets/kubernetes.io/serviceaccount/ca.crt"
+  bearerTokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
+  path: /metrics/cadvisor
+  
