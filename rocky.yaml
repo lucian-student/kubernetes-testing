@@ -1,0 +1,124 @@
+#schema
+#https://github.com/lxc/distrobuilder/blob/main/doc/examples/scheme.yaml
+image:
+  name: rockylinux-k8s
+  distribution: rockylinux
+  release: 10
+  variant: minimal
+  description: |-
+    Rockylinux {{ image.release }}
+  architecture: x86_64
+
+source:
+  downloader: rockylinux-http
+  url: https://mirror.netcologne.de/rocky/
+  variant: minimal
+  keys: #gpg --homedir /tmp/distrobuilder/rockylinux-10-x86_64/gpg.2444647378 --keyserver hkps.pool.sks-keyservers.net --recv-keys 0xBFAE243EDEF0530191A226314C360B7022B7FA33
+    - |
+      -----BEGIN PGP PUBLIC KEY BLOCK-----
+
+      mQINBGgq4akBEADFYHb9OX5/hlSJuYezxnzab01PUnec4/WvRdU5QRCySzlSicxd
+      CYRrasQEYnytGBrTMM7fGSDOH9BtVpKfFvOW8yxfBXgkXbBT2p2/PK96qjIistbG
+      GZK5yU5qhHTO4H30MaKvO8u+q3Icdtxc1I2OuGTrWQ0+MAI7dZPmNTqrvBlqks/V
+      D6Uj9SSYpV0n12GdFQZI36+MXuI170vr0qRWaU8cl0Ew3nqU9rOBvnHPzab5UhCy
+      g5+XE7QwRpKKziRxWNc40hU1OpT8yr4hoZdw9LimdA0yc7mniz7cWGPffMrfBQck
+      1TKfLC8WsTSJ32ZPT/GildTIyEOv229ofhfBnY8H+MeD1ccW352yHflvKr9Pfhxt
+      2lQuN7qCFpm5kip13hgKSnBL9M8JRICvjedrY4Q3yOfFZytWIsYsY2KAHe8lLTaR
+      afPtnC8TWkiqR3P+dpaWopnoayuVAVFIK2jzix8PgC+TwYSH+IJcmw1O1WwpDt8q
+      JfAE9Sh9X07mfbGnp0tJGG/+HXuSdwII/GXQeRE0L34DT7XcY3e3tuYCCoSpnvtm
+      VvKpW42TfGfjwRWpW/fia30YHLXSoff26G38E5LfQTjjl95uyQWv3wpDExUrDOez
+      d2hDZ3iJVWRZP3YZ1zgJexwlVoPTbDUe/wPcrFo5Don4YFD54ctUp/O39wARAQAB
+      tDxSZWxlYXNlIEVuZ2luZWVyaW5nIChSb2NreSBMaW51eCAxMCkgPHJlbGVuZ0By
+      b2NreWxpbnV4Lm9yZz6JAlIEEwEIADwWIQT8ImhZwIYL8N25WwhbEGxzb+38hQUC
+      aCrhqQIbDwULCQgHAgMiAgEGFQoJCAsCBBYCAwECHgcCF4AACgkQWxBsc2/t/IWE
+      sA/8CrZAFJwkMo2geIhcWW37XCGfKwUfB42QKkJQYoF2biOQxIcGGYU3AaA4HSfx
+      o3CvutpwTgOQmG4ZfQd920KXMcSLd0actHQ+iJP+NPFv50ks2igv51QdPLQtZKvg
+      A/tlKh4Oc0kgNBxueD5AZv8FJBEPQ7I0J/Ph9Ev1ShJrjnlVpTelNAdTNoNqf0xD
+      LH7J0kyYgqbea+vxQposbc9hnaqRWv7hbAOj8cYbhkvvtG6oyn+AZaJoM00rTAsL
+      cPjZk+HQdyUYB6JSKRZ5J16yn+D0UMwmmTI02dpd5ClFopGD/mT2erOn8hAhvvqF
+      Wr1EZEKH6YwF6PzdZ9KtbGPhRcRzVeO7EOAmZu0jhvkMTjNODYHy4xsueJ+rHf1I
+      M4rDSL579tPLAqYmnW1S3AbrJ0WkJc9KsWwzNRC5r+ftq2eTncfTU7RfGtw9shqR
+      fTkB4NUMfTOtSUrDeWYYEQtCekexoqhaP7gjsUqWNTSPgConOFIwMsT0XOvPPJgS
+      Dc0hnV6ew148jAf2L03hgDctqgsrUW3KB18bpkjUE7zfL1tweSqU3VDEQStxX9h8
+      hG+VGHS7G7F4yYTcZOTlYfDU8ex/HkudPSOfwMnftqVnXqUpnQDKkUUPyxSCVKr8
+      yN2apurNRzlrmWlJ8IuBtYFSSEqJ6sncQ/LrJRQQLTKp7sE=
+      =32Ym
+      -----END PGP PUBLIC KEY BLOCK-----
+
+targets:
+  incus:
+    vm:
+      size: 26843545600 # 25 GiB in bytes (25 * 1024 * 1024 * 1024)
+      filesystem: ext4
+files:
+  - generator: fstab         # /etc/fstab file system table
+  - generator: incus-agent
+  - generator: hostname
+    path: /etc/hostname
+  - generator: hosts
+    path: /etc/hosts
+  - generator: dump
+    path: /etc/sysctl.d/99-kubernetes-cri.conf
+    content: |
+      net.bridge.bridge-nf-call-iptables  = 1
+      net.bridge.bridge-nf-call-ip6tables = 1
+      net.ipv4.ip_forward                 = 1
+
+packages:
+  # 1. Choose the backend package manager engine
+  manager: dnf
+
+  # 2. Update all underlying system packages to the latest release
+  update: true
+
+  # 3. Explicitly declare core packages to inject
+  sets:
+    - action: install
+      packages:
+      # --- Vital System & Boot Utilities ---
+      - kernel
+      - grub2-efi-x64        # Required for UEFI booting
+      - shim-x64             # Required for secure boot chain compatibility
+      - efibootmgr           # Allows configuring UEFI boot entries during build
+      - linux-firmware       # Provides essential device drivers for the guest kernel
+      - openssh-server
+      - NetworkManager
+      - tar
+
+      # --- K8s Networking Dependencies ---
+      - iptables # Needed by kube-proxy to route internal cluster pod traffic
+      - iproute # Grants the node low-level network management binaries (ip, bridge)
+      - conntrack-tools # Essential for tracking network state connections across pods
+      - socat # Required by the kubelet agent to forward traffic ports (kubectl port-forward)
+
+      # --- Diagnostic & Troubleshooting Tools ---
+      - curl # Used to fetch configurations, manifests, and pull binaries
+      - wget # Standard alternate retrieval tool
+      - iputils # Includes the 'ping' command for debugging pod-to-pod links
+      - python3-libdnf
+  repositories: []
+  
+actions:
+  - trigger: post-packages
+    action: |-
+      #!/bin/bash
+      # Generate GRUB config
+      grub2-mkconfig -o /boot/grub2/grub.cfg
+      
+      # Ensure default boot entry (set to 0 for first entry)
+      sed -i 's/^#GRUB_DEFAULT=.*/GRUB_DEFAULT=0/' /etc/default/grub
+      
+      # Install GRUB for UEFI
+      grub2-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=rocky
+      
+      # Regenerate config with new defaults
+      grub2-mkconfig -o /boot/grub2/grub.cfg
+      
+      # Enable services
+      systemctl enable NetworkManager.service
+      systemctl enable sshd.service
+      systemctl enable incus-agent.service
+      systemctl enable systemd-modules-load.service
+
+mappings:
+  architecture_map: centos

@@ -1,0 +1,4 @@
+vm-template
+*.squashfs
+*.xz
+*.qcow2

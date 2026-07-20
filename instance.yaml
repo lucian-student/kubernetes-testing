@@ -1,0 +1,12 @@
+config:
+  limits.cpu: "4"
+  limits.memory: "4GiB"
+devices:
+  root:
+    path: /
+    pool: kubernetes
+    type: disk
+  eth0:
+    name: eth0
+    network: incusbr0
+    type: nic
