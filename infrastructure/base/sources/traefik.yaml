@@ -1,0 +1,36 @@
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: GitRepository
+metadata:
+  name: traefik-charts
+  namespace: flux-system
+spec:
+  interval: 1h0s
+  ref:
+    branch: v40.0
+  url: https://github.com/traefik/traefik-helm-chart
+---
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: HelmChart
+metadata:
+  name: traefik-crds
+  namespace: flux-system
+spec:
+  interval: 1h0s
+  chart: ./traefik-crds
+  reconcileStrategy: Revision
+  sourceRef:
+    kind: GitRepository
+    name: traefik-charts
+---
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: HelmChart
+metadata:
+  name: traefik
+  namespace: flux-system
+spec:
+  interval: 1h0s
+  chart: ./traefik
+  reconcileStrategy: Revision
+  sourceRef:
+    kind: GitRepository
+    name: traefik-charts

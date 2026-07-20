@@ -1,0 +1,29 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: traefik
+  namespace: prod
+  annotations:
+    cert-manager.io/cluster-issuer: cluster-issuer
+spec:
+  gatewayClassName: traefik
+  listeners:
+    - name: https-traefik
+      hostname: local.traefik.com
+      protocol: HTTPS
+      port: 8443
+      tls:
+        mode: Terminate
+        #certificateRefs:
+        #  - name: secret-tls
+        #    group: ""
+    - name: https-grafana
+      protocol: HTTPS
+      hostname: local.grafana.com
+      port: 8443
+      tls: 
+        mode: Terminate
+        #certificateRefs:
+        #  - name: secret-tls
+        #    group: "" 
+  

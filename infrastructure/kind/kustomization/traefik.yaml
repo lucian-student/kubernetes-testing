@@ -1,0 +1,51 @@
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+ name: traefik-auth
+ namespace: flux-system
+spec:
+  interval: 10m0s
+  path: ./infrastructure/kind/traefik/auth
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+  prune: true
+  decryption:
+    provider: sops
+    secretRef:
+      name: sops-age
+  wait: true
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+ name: traefik-controller
+ namespace: flux-system
+spec:
+  interval: 10m0s
+  path: ./infrastructure/kind/traefik/controller
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+  prune: true
+  wait: true
+  dependsOn:
+    - name: traefik-auth
+    - name: cert-manager-config
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+ name: traefik-config
+ namespace: flux-system
+spec:
+  interval: 10m0s
+  path: ./infrastructure/kind/traefik/config
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+  prune: true
+  wait: true
+  dependsOn:
+    - name: traefik-controller
+  

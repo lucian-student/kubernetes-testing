@@ -1,0 +1,69 @@
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: grafana
+  namespace: flux-system
+spec: 
+  interval: 10m0s
+  chart: 
+    spec: 
+      chart: grafana
+      reconcileStrategy: ChartVersion
+      sourceRef:
+        kind: HelmRepository
+        name: grafana
+        namespace: flux-system
+      version: 10.5.15
+  storageNamespace: prod
+  targetNamespace: prod
+  values: 
+    fullnameOverride: grafana
+    replicas: 1
+    grafana.ini:
+      database:
+        type: sqlite3
+      #auth.proxy:
+      #  enabled: true
+      #  header_name: X-Webauth-User
+      #  header_property: username
+      #  auto_sign_up: true
+      #  headers: "Role:X-Webauth-Role"
+      server:
+        domain: local.grafana.com
+        root_url: https://local.grafana.com
+      log:
+        level: debug
+        mode: console
+    plugins:
+    - victoriametrics-metrics-datasource
+    datasources:
+      datasources.yaml:
+        apiVersion: 1
+        datasources:
+         - name: VictoriaMetrics
+           type: victoriametrics-metrics-datasource
+           url: http://vmsingle-metrics.monitoring-prod.svc.cluster.local:8428
+           access: proxy
+           isDefault: true
+    route:
+      main:
+        enabled: true
+        apiVersion: gateway.networking.k8s.io/v1
+        kind: HTTPRoute
+        hostnames:
+          - local.grafana.com
+        parentRefs:
+          - group: gateway.networking.k8s.io
+            kind: Gateway
+            namespace: prod
+            name: traefik
+        matches:
+          - path:
+              type: PathPrefix
+              value: /
+        #filters:
+        # - type: ExtensionRef
+        #   extensionRef:
+        #    group: traefik.io
+        #    kind: Middleware
+        #    name: admin-oidc

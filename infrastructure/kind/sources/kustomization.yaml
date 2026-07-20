@@ -1,6 +1,7 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
+  - "../../base/sources/traefik.yaml"
   - "../../base/sources/cert-manager.yaml"
   - "../../base/sources/victoria-metrics.yaml"
   - "../../base/sources/grafana.yaml"
