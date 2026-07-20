@@ -4,6 +4,7 @@ metadata:
   name: traefik
   namespace: prod
   annotations:
+    # This tells cert-manager to automatically issue certificates for this Gateway
     cert-manager.io/cluster-issuer: cluster-issuer
 spec:
   gatewayClassName: traefik
@@ -14,16 +15,18 @@ spec:
       port: 8443
       tls:
         mode: Terminate
-        #certificateRefs:
-        #  - name: secret-tls
-        #    group: ""
+        certificateRefs:
+          - name: traefik-tls-cert  # cert-manager will create a secret with this name
+            group: ""               # Empty string means standard core Kubernetes API Group (Secret)
+            kind: Secret
+            
     - name: https-grafana
-      protocol: HTTPS
       hostname: local.grafana.com
+      protocol: HTTPS
       port: 8443
       tls: 
         mode: Terminate
-        #certificateRefs:
-        #  - name: secret-tls
-        #    group: "" 
-  
+        certificateRefs:
+          - name: grafana-tls-cert  # cert-manager will create a secret with this name
+            group: ""
+            kind: Secret
