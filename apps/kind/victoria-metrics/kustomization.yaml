@@ -4,13 +4,13 @@ resources:
   - ../../base/victoria-metrics/metrics-cadvisor.yaml
 patches:
   - target:
-      kind: VMAgent
-      name:  metrics-agent
+      kind: VMNodeScrape
+      name:  cadvisor
     patch: |
       apiVersion: operator.victoriametrics.com/v1beta1
-      kind: VMAgent
+      kind: VMNodeScrape
       metadata:
-        name: metrics-agent
+        name: cadvisor
       spec:
         tlsConfig:
           insecureSkipVerify: true
