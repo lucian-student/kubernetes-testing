@@ -10,10 +10,6 @@ spec:
     kind: GitRepository
     name: flux-system
   prune: true
-  decryption:
-    provider: sops
-    secretRef:
-      name: sops-age
   wait: true
 ---
 apiVersion: kustomize.toolkit.fluxcd.io/v1
