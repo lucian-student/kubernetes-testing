@@ -1,12 +1,17 @@
 config:
   limits.cpu: "4"
   limits.memory: "4GiB"
+  security.secureboot: "false"
 devices:
-  root:
-    path: /
-    pool: kubernetes
+  agent:
+    source: agent:config
     type: disk
   eth0:
     name: eth0
     network: incusbr0
     type: nic
+  root:
+    io.bus: virtio-blk
+    path: /
+    pool: kubernetes
+    type: disk
