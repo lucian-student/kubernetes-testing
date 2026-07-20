@@ -16,5 +16,7 @@ spec:
   interval: 10m
   storageNamespace: kube-system
   targetNamespace: kube-system
-  values: {}
+  values:
+    args:
+      - --kubelet-insecure-tls
     
