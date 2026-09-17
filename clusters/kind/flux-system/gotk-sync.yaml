@@ -11,7 +11,7 @@ spec:
     branch: master
   secretRef:
     name: flux-system
-  url: https://github.com/lucian-student/kubernetes-testing.git
+  url: ssh://git@github.com/lucian-student/kubernetes-testing
 ---
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
