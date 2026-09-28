@@ -6,3 +6,4 @@ resources:
   - "../../base/sources/victoria-metrics.yaml"
   - "../../base/sources/grafana.yaml"
   - "../../base/sources/metrics-server.yaml"
+  - "../../base/sources/cilium.yaml"
