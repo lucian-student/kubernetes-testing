@@ -12,7 +12,6 @@ spec:
     sourceRef:
       name: cilium
       kind: HelmRepository
-    interval: 10m0s
   targetNamespace: kube-system
   storageNamespace: kube-system
   values:
