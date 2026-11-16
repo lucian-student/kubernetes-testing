@@ -1,0 +1,86 @@
+#this section represents admin dashboard configuration
+admin:
+  address:
+    socket_address: { address: 127.0.0.1, port_value: 9901 }
+
+static_resources:
+  #listeners 
+  listeners:
+  - name: listener_0
+    address:
+      socket_address: { address: 127.0.0.1, port_value: 10000 }
+    #i guess defines array of filter chains
+    filter_chains:
+    - filters:
+      #name of the filter
+      - name: envoy.filters.network.http_connection_manager
+        typed_config:
+          #protobuf object type of this configuration
+          "@type": type.googleapis.com/envoy.extensions.filters.network.http_connection_manager.v3.HttpConnectionManager
+          #prefix for logging
+          stat_prefix: ingress_http
+          #codec, HTTP1, HTTP2, HTTP3
+          codec_type: AUTO
+          #if u use route_config, routing table is static and defined here
+          route_config:
+            # i guess name of routing table
+            name: local_route 
+            #seznam virtualních hostitelů v routing tabulce
+            virtual_hosts:
+            # název hostitele
+            - name: local_service
+              #matchne všechny domeny
+              domains: ["*"]
+              # cesty, na který se budu matchovat
+              routes:
+                #matching, tady se matchuje pouze pomocí prefixu, pokud je lomeno
+              - match: { prefix: "/" }
+                # když je prefix lomeno, tak routne do some_service clusteru
+                route: { cluster: some_service }
+          http_filters:
+          #
+          - name: envoy.filters.http.router
+            typed_config:
+              "@type": type.googleapis.com/envoy.extensions.filters.http.router.v3.Router
+  #i know from docs, that cluster is a group of upstream hosts
+  clusters:
+    #název clusteru
+  - name: some_service
+    #timeout
+    connect_timeout: 0.25s
+    #loadbalancing
+    lb_policy: ROUND_ROBIN
+    #
+    type: EDS
+    eds_cluster_config:
+      eds_config:
+        api_config_source:
+          api_type: GRPC
+          grpc_services:
+            - envoy_grpc:
+                cluster_name: xds_cluster
+  - name: xds_cluster
+    connect_timeout: 0.25s
+    type: STATIC
+    lb_policy: ROUND_ROBIN
+    typed_extension_protocol_options:
+      envoy.extensions.upstreams.http.v3.HttpProtocolOptions:
+        "@type": type.googleapis.com/envoy.extensions.upstreams.http.v3.HttpProtocolOptions
+        explicit_http_config:
+          http2_protocol_options:
+            connection_keepalive:
+              interval: 30s
+              timeout: 5s
+    upstream_connection_options:
+      # configure a TCP keep-alive to detect and reconnect to the admin
+      # server in the event of a TCP socket half open connection
+      tcp_keepalive: {}
+    load_assignment:
+      cluster_name: xds_cluster
+      endpoints:
+      - lb_endpoints:
+        - endpoint:
+            address:
+              socket_address:
+                address: 127.0.0.1
+                port_value: 5678
