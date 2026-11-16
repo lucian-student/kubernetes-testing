@@ -9,9 +9,9 @@ spec:
     spec: 
       chart: cilium
       version: 1.20.2
-    sourceRef:
-      name: cilium
-      kind: HelmRepository
+      sourceRef:
+        name: cilium
+        kind: HelmRepository
   targetNamespace: kube-system
   storageNamespace: kube-system
   values:

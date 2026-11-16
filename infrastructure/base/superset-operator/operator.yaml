@@ -4,11 +4,13 @@ metadata:
   name: superset-operator
   namespace: superset-operator
 spec:
-  chart: superset-operator
-  reconcileStrategy: ChartVersion
-  sourceRef:
-    name: superset-operator
-    kind: HelmRepository
+  chart:
+    spec:
+      chart: superset-operator
+      reconcileStrategy: ChartVersion
+      sourceRef:
+        name: superset-operator
+        kind: HelmRepository
   interval: 1m0s
   watch:
     namespaces:
