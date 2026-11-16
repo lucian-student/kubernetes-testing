@@ -9,8 +9,9 @@ spec:
       chart: superset-operator
       reconcileStrategy: ChartVersion
       sourceRef:
-        name: flux-system
+        name: superset-operator
         kind: HelmRepository
+        namespace: flux-system
   interval: 1m0s
   values:
     watch:
