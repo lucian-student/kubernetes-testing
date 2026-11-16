@@ -12,7 +12,8 @@ spec:
         name: superset-operator
         kind: HelmRepository
   interval: 1m0s
-  watch:
-    namespaces:
-      - superset-operator
-      - superset
+  values:
+    watch:
+      namespaces:
+        - superset-operator
+        - superset
