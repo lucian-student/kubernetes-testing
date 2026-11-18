@@ -6,4 +6,4 @@ spec:
   chart:
     spec:
       sourceRef:
-        namespace: superset
+        namespace: flux-system
