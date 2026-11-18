@@ -10,3 +10,4 @@ resources:
   - "../../base/sources/superset-operator.yaml"
   - "../../base/sources/valkey.yaml"
   - "../../base/sources/cnpg.yaml"
+  - "../../base/sources/vault.yaml"
