@@ -1,0 +1,24 @@
+apiVersion: superset.apache.org/v1alpha1
+kind: Superset
+metadata:
+  name: my-superset
+spec:
+  image:
+    tag: "6.1.0"
+  environment: Development
+  secretKey: thisIsNotSecure_changeInProduction!
+  metastore:
+    host: postgres
+    port: 5432
+    database: superset
+    username: superset
+    password: superset
+  featureFlags:
+    ENABLE_TEMPLATE_PROCESSING: true
+  webServer:
+    replicas: 2
+  mcpServer: {}
+  lifecycle:
+    init:
+      adminUser: {}
+      loadExamples: true

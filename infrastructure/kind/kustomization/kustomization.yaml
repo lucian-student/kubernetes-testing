@@ -7,3 +7,4 @@ resources:
   - metrics-server.yaml
   - cilium.yaml
   - superset-operator.yaml
+  - superset.yaml
