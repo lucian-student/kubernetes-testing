@@ -1,6 +1,6 @@
 apiVersion: source.toolkit.fluxcd.io/v1
 kind: HelmRepository
-metdata:
+metadata:
   name: cnpg-operator
   namespace: flux-system
 spec:
