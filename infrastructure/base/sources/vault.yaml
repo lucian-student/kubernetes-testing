@@ -5,4 +5,4 @@ metadata:
   namespace: flux-system
 spec:
   interval: 1m0s
-  url: hashicorp https://helm.releases.hashicorp.com
+  url: https://helm.releases.hashicorp.com
