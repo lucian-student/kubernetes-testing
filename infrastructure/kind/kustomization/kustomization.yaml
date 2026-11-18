@@ -9,3 +9,4 @@ resources:
   - superset-operator.yaml
   - superset.yaml
   - cnpg-operator.yaml
+  - vault.yaml
