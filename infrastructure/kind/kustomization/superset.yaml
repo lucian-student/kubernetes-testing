@@ -11,3 +11,5 @@ spec:
   path: ./infrastructure/kind/superset/data
   prune: true
   wait: true
+  dependsOn:
+    - name: cnpg-operator
