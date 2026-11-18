@@ -13,4 +13,9 @@ spec:
         kind: HelmRepository
         namespace: flux-system
   interval: 1m0s
-  values: {}
+  values:
+    ui:
+      enabled: true
+    dataStorage:
+      enabled: true
+      size: 1Gi
