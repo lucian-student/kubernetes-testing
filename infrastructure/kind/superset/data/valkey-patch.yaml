@@ -1,0 +1,9 @@
+apiVersion: apps/v1
+kind: HelmRelease
+metadata:
+  name: valkey
+spec:
+  chart:
+    spec:
+      sourceRef:
+        namespace: superset

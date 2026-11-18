@@ -4,4 +4,8 @@ namespace: superset
 resources:
   - namespace.yaml
   - ../../../base/valkey
-
+patches:
+  - target:
+      kind: HelmRelease
+      name: valkey
+    path: valkey-patch.yaml
